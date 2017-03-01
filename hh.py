@@ -7,12 +7,11 @@ from select import select
 import struct
 
 
-def bytes2addr(bytes):
-    """Convert a hash to an address pair."""
-    if len(bytes) != 6:
+def bytes_to_address(b):
+    if len(b) != 6:
         raise ValueError, "invalid bytes"
-    host = socket.inet_ntoa(bytes[:4])
-    port, = struct.unpack("H", bytes[-2:])
+    host = socket.inet_ntoa(b[:4])
+    port, = struct.unpack("H", b[-2:])
     return host, port
 
 
@@ -34,7 +33,7 @@ def main():
     print >> sys.stderr, "request sent, waiting for parkner in pool '%s'..." % pool
     data, addr = sockfd.recvfrom(6)
 
-    target = bytes2addr(data)
+    target = bytes_to_address(data)
     print >> sys.stderr, "connected to %s:%d" % target
 
     while True:

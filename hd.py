@@ -6,9 +6,8 @@ import struct
 import sys
 
 
-def addr2bytes(addr):
-    """Convert an address pair to a hash."""
-    host, port = addr
+def address_to_bytes(address):
+    host, port = address
     try:
         host = socket.gethostbyname(host)
     except (socket.gaierror, socket.error):
@@ -17,9 +16,9 @@ def addr2bytes(addr):
         port = int(port)
     except ValueError:
         raise ValueError, "invalid port"
-    bytes = socket.inet_aton(host)
-    bytes += struct.pack("H", port)
-    return bytes
+    b = socket.inet_aton(host)
+    b += struct.pack("H", port)
+    return b
 
 
 def main():
@@ -48,8 +47,8 @@ def main():
 
         try:
             a, b = poolqueue[pool], addr
-            sockfd.sendto(addr2bytes(a), b)
-            sockfd.sendto(addr2bytes(b), a)
+            sockfd.sendto(address_to_bytes(a), b)
+            sockfd.sendto(address_to_bytes(b), a)
             print "linked", pool
             del poolqueue[pool]
         except KeyError:
